@@ -1,19 +1,19 @@
-import openai
 import os
 from dotenv import load_dotenv
 import PyPDF2
 import re
+from openai import OpenAI
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Get API key from environment variable (NEVER hardcode it!)
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Initialize OpenAI client with API key from environment
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def call_gpt(prompt, system_message="You are a helpful AI interview coach.", temperature=0.7):
-    """Call OpenAI GPT API"""
+    """Call OpenAI GPT API using the new client format"""
     try:
-        response = openai.chat.completions.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": system_message},
