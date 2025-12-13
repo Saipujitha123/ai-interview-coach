@@ -180,39 +180,42 @@ elif page == "📝 Job Description Analyzer":
     if default_job_desc and job_desc:
         st.session_state.selected_job_desc = ""
     
-    if st.button("🔍 Analyze Job Description", type="primary"):
-        if job_desc:
-            with st.spinner("🤖 AI is analyzing the job description..."):
-                try:
-                    analysis = analyze_job_description(job_desc)
-                    
-                    if "Error" in analysis:
-                        st.error(f"❌ {analysis}")
-                        st.info("💡 Check your API key in Streamlit Secrets or .env file")
-                    else:
-                        st.session_state.job_desc = job_desc
-                        
-                        # Display results in MULTIPLE ways to ensure visibility
-                        st.markdown("### 📊 Analysis Results")
-                        
-                        # Method 1: In success box
-                        st.success("✅ Analysis Complete!")
-                        
-                        # Method 2: In white container with black text
-                        st.container()
-                        st.markdown(f"""
-                        <div style='background-color: white; padding: 25px; border-radius: 10px; 
-                        border: 3px solid #1E88E5; color: black; font-size: 16px; line-height: 1.8;'>
-                        {analysis.replace('\n', '<br>')}
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                        # Method 3: Also show in text format for guaranteed visibility
-                        with st.expander("📄 View as Plain Text", expanded=False):
-                            st.text(analysis)
+   if st.button("🔍 Analyze Job Description", type="primary"):
+    
+    # Debug: Show what we received
+    st.write(f"🔍 Debug: Job description length = {len(job_desc)} characters")
+    
+    if job_desc:
+        st.write("✅ Debug: Job description exists, calling API...")
+        
+        with st.spinner("🤖 AI is analyzing the job description..."):
+            try:
+                analysis = analyze_job_description(job_desc)
                 
-                except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
+                st.write(f"✅ Debug: Got response, length = {len(analysis)} characters")
+                st.write(f"✅ Debug: Response starts with: {analysis[:100]}")
+                
+                if "Error" in analysis:
+                    st.error(f"❌ API Error Detected")
+                    st.code(analysis)
+                else:
+                    st.session_state.job_desc = job_desc
+                    st.markdown("### 📊 Analysis Results")
+                    
+                    # Show in multiple ways
+                    st.success("✅ Analysis Complete!")
+                    
+                    # Show as plain text
+                    st.text_area("Results:", value=analysis, height=400)
+                    
+                    # Also show formatted
+                    st.write(analysis)
+                
+            except Exception as e:
+                st.error(f"❌ Exception: {str(e)}")
+                st.write(f"Exception type: {type(e)}")
+    else:
+        st.warning("⚠️ Debug: Job description is empty!")
 
 # INTERVIEW QUESTIONS GENERATOR
 elif page == "❓ Interview Questions Generator":
