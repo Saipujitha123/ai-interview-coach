@@ -180,10 +180,10 @@ elif page == "📝 Job Description Analyzer":
     if default_job_desc and job_desc:
         st.session_state.selected_job_desc = ""
     
-   if st.button("🔍 Analyze Job Description", type="primary"):
+    if st.button("🔍 Analyze Job Description", type="primary"):
     
     # Debug: Show what we received
-    st.write(f"🔍 Debug: Job description length = {len(job_desc)} characters")
+     st.write(f"🔍 Debug: Job description length = {len(job_desc)} characters")
     
     if job_desc:
         st.write("✅ Debug: Job description exists, calling API...")
