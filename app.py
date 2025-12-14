@@ -113,38 +113,35 @@ elif page == "📝 Job Description Analyzer":
     
     if 'selected_job_desc' not in st.session_state:
         st.session_state.selected_job_desc = ""
+    if 'last_analysis' not in st.session_state:
+        st.session_state.last_analysis = ""
     
-    if st.session_state.selected_job_desc:
+    default_value = st.session_state.selected_job_desc
+    if default_value:
         st.info("✅ Job loaded from Browse Sample Jobs!")
     
-    job_desc = st.text_area("Paste Job Description:", value=st.session_state.selected_job_desc, height=300, placeholder="Copy and paste job description...")
-    
-    if st.session_state.selected_job_desc and job_desc:
-        st.session_state.selected_job_desc = ""
+    job_desc = st.text_area("Paste Job Description:", value=default_value, height=300, placeholder="Copy and paste job description...")
     
     if st.button("🔍 Analyze Job Description", type="primary"):
         if len(job_desc) > 10:
+            st.session_state.selected_job_desc = ""
+            
             with st.spinner("🤖 Analyzing..."):
                 analysis = analyze_job_description(job_desc)
+                st.session_state.last_analysis = analysis
                 
                 if "Error" in analysis:
                     st.error(f"❌ {analysis}")
-                    st.info("💡 Check API key and credits")
                 else:
                     st.markdown("### 📊 Analysis Results")
-                    st.success("✅ Complete!")
-                    
-                    st.markdown(f"""
-                    <div style='background-color: white; padding: 25px; border-radius: 10px; 
-                    border: 3px solid #1E88E5; color: black; font-size: 16px; line-height: 1.8;'>
-                    {analysis.replace(chr(10), '<br>')}
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    with st.expander("📄 View Plain Text"):
-                        st.text(analysis)
+                    st.success("✅ Analysis Complete!")
+                    st.write(analysis)
         else:
             st.warning("Please add a job description")
+    
+    if st.session_state.last_analysis:
+        st.markdown("### 📋 Last Analysis")
+        st.write(st.session_state.last_analysis)
 
 elif page == "❓ Interview Questions Generator":
     st.markdown("## ❓ Interview Questions Generator")
