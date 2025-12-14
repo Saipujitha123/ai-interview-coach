@@ -173,31 +173,23 @@ elif page == "📝 Job Description Analyzer":
         st.session_state.selected_job_desc = ""
     
     if st.button("🔍 Analyze Job Description", type="primary"):
-        if job_desc:
-            with st.spinner("🤖 AI is analyzing the job description..."):
-                try:
-                    analysis = analyze_job_description(job_desc)
-                    
-                    if "Error" in analysis:
-                        st.error(f"❌ {analysis}")
-                        st.info("💡 Check your OpenAI API key and credits")
-                    else:
-                        st.markdown("### 📊 Analysis Results")
-                        st.success("✅ Analysis Complete!")
-                        
-                        # Display results
-                        st.markdown(f"""
-                        <div style='background-color: white; padding: 25px; border-radius: 10px; 
-                        border: 3px solid #1E88E5; color: black; font-size: 16px; line-height: 1.8;'>
-                        {analysis.replace(chr(10), '<br>')}
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                        with st.expander("📄 View Plain Text"):
-                            st.text(analysis)
-                
-                except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
+    if job_desc:
+        st.write("✅ Step 1: Button clicked, job desc exists")
+        st.write(f"✅ Step 2: Job length = {len(job_desc)} chars")
+        
+        try:
+            st.write("✅ Step 3: Calling OpenAI API...")
+            analysis = analyze_job_description(job_desc)
+            
+            st.write(f"✅ Step 4: Got response = {len(analysis)} chars")
+            st.write(f"✅ Step 5: First 100 chars: {analysis[:100]}")
+            
+            st.markdown("### 📊 ANALYSIS:")
+            st.text_area("Results", analysis, height=400)
+            
+        except Exception as e:
+            st.error(f"❌ EXCEPTION: {str(e)}")
+            st.write(f"Error type: {type(e).__name__}")
 
 # INTERVIEW QUESTIONS GENERATOR
 elif page == "❓ Interview Questions Generator":
